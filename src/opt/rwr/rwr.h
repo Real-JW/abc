@@ -70,6 +70,7 @@ struct Rwr_Man_t_
     int                nClasses;         // the number of NN classes
     // the result of resynthesis
     int                fCompl;           // indicates if the output of FF should be complemented
+    int                fRelaxDepth;      // allow area improvements even if levels grow
     void *             pGraph;           // the decomposition tree (temporary)
     Vec_Ptr_t *        vFanins;          // the fanins array (temporary)
     Vec_Ptr_t *        vFaninsCur;       // the fanins array (temporary)
@@ -170,4 +171,3 @@ ABC_NAMESPACE_HEADER_END
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-

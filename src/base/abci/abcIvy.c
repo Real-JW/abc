@@ -553,10 +553,10 @@ int Abc_NtkIvyProve( Abc_Ntk_t ** ppNtk, void * pPars )
         pParams->fUseRewriting = 0;
         pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          
         Abc_NtkDelete( pNtkTemp );
-        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );
+        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0, 0 );
         pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );          
         Abc_NtkDelete( pNtkTemp );
-        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );
+        Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0, 0 );
         Abc_NtkRefactor( pNtk, 10, 1, 16, 0, 0, 0, 0 );
 //printf( "After rwsat = %d. ", Abc_NtkNodeNum(pNtk) );
 //ABC_PRT( "Time", Abc_Clock() - clk );
@@ -1247,4 +1247,3 @@ Gia_Man_t * Gia_ManIvyFraigTest( Gia_Man_t * p, int nConfLimit, int fVerbose )
 
 
 ABC_NAMESPACE_IMPL_END
-

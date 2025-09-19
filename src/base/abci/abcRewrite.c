@@ -58,7 +58,7 @@ extern void  Abc_PlaceUpdate( Vec_Ptr_t * vAddedCells, Vec_Ptr_t * vUpdatedNets 
   SeeAlso     []
 
 ***********************************************************************/
-int Abc_NtkRewrite( Abc_Ntk_t * pNtk, int fUpdateLevel, int fUseZeros, int fVerbose, int fVeryVerbose, int fPlaceEnable )
+int Abc_NtkRewrite( Abc_Ntk_t * pNtk, int fUpdateLevel, int fUseZeros, int fVerbose, int fVeryVerbose, int fPlaceEnable, int fRelaxDepth )
 {
     extern int           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );
     ProgressBar * pProgress;
@@ -92,6 +92,7 @@ int Abc_NtkRewrite( Abc_Ntk_t * pNtk, int fUpdateLevel, int fUseZeros, int fVerb
     pManRwr = Rwr_ManStart( 0 );
     if ( pManRwr == NULL )
         return 0;
+    pManRwr->fRelaxDepth = fRelaxDepth;
     // compute the reverse levels if level update is requested
     if ( fUpdateLevel )
         Abc_NtkStartReverseLevels( pNtk, 0 );
@@ -424,4 +425,3 @@ void Abc_RwrExpWithCut( Abc_Obj_t * pNode, Vec_Ptr_t * vLeaves )
 
 
 ABC_NAMESPACE_IMPL_END
-
