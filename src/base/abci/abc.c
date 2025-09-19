@@ -80,8 +80,6 @@ ABC_NAMESPACE_IMPL_START
 
 //#define USE_MINISAT22
 
-static int Abc_CommandRewriteArea           ( Abc_Frame_t * pAbc, int argc, char ** argv );
-
 static int Abc_CommandPrintStats             ( Abc_Frame_t * pAbc, int argc, char ** argv );
 static int Abc_CommandPrintExdc              ( Abc_Frame_t * pAbc, int argc, char ** argv );
 static int Abc_CommandPrintIo                ( Abc_Frame_t * pAbc, int argc, char ** argv );
@@ -973,7 +971,6 @@ void Abc_Init( Abc_Frame_t * pAbc )
     Cmd_CommandAdd( pAbc, "Synthesis",    "xec",           Abc_CommandRunTest,          0 );
 
     Cmd_CommandAdd( pAbc, "Synthesis",    "rewrite",       Abc_CommandRewrite,          1 );
-    Cmd_CommandAdd( pAbc, "Synthesis",    "rewrite_area",  Abc_CommandRewriteArea,      1 );
     Cmd_CommandAdd( pAbc, "Synthesis",    "refactor",      Abc_CommandRefactor,         1 );
 //    Cmd_CommandAdd( pAbc, "Synthesis",    "restructure",   Abc_CommandRestructure,      1 );
     Cmd_CommandAdd( pAbc, "Synthesis",    "resub",         Abc_CommandResubstitute,     1 );
@@ -8344,119 +8341,6 @@ usage:
     Abc_Print( -2, "\t         performs technology-independent rewriting of the AIG\n" );
     Abc_Print( -2, "\t-l     : toggle preserving the number of levels [default = %s]\n", fUpdateLevel? "yes": "no" );
     Abc_Print( -2, "\t-d     : toggle allowing depth relaxation [default = %s]\n", fRelaxDepth? "yes": "no" );
-    Abc_Print( -2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", fUseZeros? "yes": "no" );
-    Abc_Print( -2, "\t-v     : toggle verbose printout [default = %s]\n", fVerbose? "yes": "no" );
-    Abc_Print( -2, "\t-w     : toggle printout subgraph statistics [default = %s]\n", fVeryVerbose? "yes": "no" );
-//    Abc_Print( -2, "\t-p     : toggle placement-aware rewriting [default = %s]\n", fPlaceEnable? "yes": "no" );
-    Abc_Print( -2, "\t-h     : print the command usage\n");
-    return 1;
-}
-
-/**Function*************************************************************
-
-  Synopsis    []
-
-  Description []
-
-  SideEffects []
-
-  SeeAlso     []
-
-***********************************************************************/
-int Abc_CommandRewriteArea( Abc_Frame_t * pAbc, int argc, char ** argv )
-{
-    Abc_Ntk_t * pNtk = Abc_FrameReadNtk(pAbc), * pDup;
-    int c, RetValue;
-    int fUpdateLevel;
-    int fPrecompute;
-    int fUseZeros;
-    int fVerbose;
-    int fVeryVerbose;
-    int fPlaceEnable;
-    int fRelaxDepth;
-    extern void Rwr_Precompute();
-
-    fUpdateLevel = 1;
-    fPrecompute  = 0;
-    fUseZeros    = 0;
-    fVerbose     = 0;
-    fVeryVerbose = 0;
-    fPlaceEnable = 0;
-    fRelaxDepth  = 1; // always relax depth for area-oriented rewriting
-    Extra_UtilGetoptReset();
-    while ( ( c = Extra_UtilGetopt( argc, argv, "lxzvwh" ) ) != EOF )
-    {
-        switch ( c )
-        {
-        case 'l':
-            fUpdateLevel ^= 1;
-            break;
-        case 'x':
-            fPrecompute ^= 1;
-            break;
-        case 'z':
-            fUseZeros ^= 1;
-            break;
-        case 'v':
-            fVerbose ^= 1;
-            break;
-        case 'w':
-            fVeryVerbose ^= 1;
-            break;
-        case 'p':
-            fPlaceEnable ^= 1;
-            break;
-        case 'h':
-            goto usage;
-        default:
-            goto usage;
-        }
-    }
-
-    if ( fPrecompute )
-    {
-        Rwr_Precompute();
-        return 0;
-    }
-
-    if ( pNtk == NULL )
-    {
-        Abc_Print( -1, "Empty network.\n" );
-        return 1;
-    }
-    if ( !Abc_NtkIsStrash(pNtk) )
-    {
-        Abc_Print( -1, "This command can only be applied to an AIG (run \"strash\").\n" );
-        return 1;
-    }
-    if ( Abc_NtkGetChoiceNum(pNtk) )
-    {
-        Abc_Print( -1, "AIG resynthesis cannot be applied to AIGs with choice nodes.\n" );
-        return 1;
-    }
-
-    pDup = Abc_NtkDup( pNtk );
-    RetValue = Abc_NtkRewrite( pNtk, fUpdateLevel, fUseZeros, fVerbose, fVeryVerbose, fPlaceEnable, fRelaxDepth );
-    if ( RetValue == -1 )
-    {
-        Abc_FrameReplaceCurrentNetwork( pAbc, pDup );
-        printf( "An error occurred during computation. The original network is restored.\n" );
-    }
-    else
-    {
-        Abc_NtkDelete( pDup );
-        if ( RetValue == 0 )
-        {
-            Abc_Print( 0, "Area-oriented rewriting has failed.\n" );
-            return 1;
-        }
-    }
-    return 0;
-
-usage:
-    Abc_Print( -2, "usage: rewrite_area [-lzvwh]\n" );
-    Abc_Print( -2, "\t         performs rewriting prioritizing area even if depth grows\n" );
-    Abc_Print( -2, "\t-l     : toggle preserving the number of levels [default = %s]\n", fUpdateLevel? "yes": "no" );
     Abc_Print( -2, "\t-z     : toggle using zero-cost replacements [default = %s]\n", fUseZeros? "yes": "no" );
     Abc_Print( -2, "\t-v     : toggle verbose printout [default = %s]\n", fVerbose? "yes": "no" );
     Abc_Print( -2, "\t-w     : toggle printout subgraph statistics [default = %s]\n", fVeryVerbose? "yes": "no" );

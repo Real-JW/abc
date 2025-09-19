@@ -80,6 +80,8 @@ alias rty read_liberty
 alias rlut read_lut
 alias rw rewrite
 alias rwz rewrite -z
+alias rwa rewrite_area
+alias rwaz rewrite_area -z
 alias rf refactor
 alias rfz refactor -z
 alias re restructure
@@ -109,7 +111,8 @@ alias wv write_verilog
 # standard scripts
 alias resyn       "b; rw; rwz; b; rwz; b"
 alias resyn2      "b; rw; rf; b; rw; rwz; b; rfz; rwz; b"
-alias resyn2a     "b; rw; b; rw; rwz; b; rwz; b"
+alias resyna2     "b; rwa; rf; b; rwa; rwz; b; rfz; rwz; b"
+alias resyna2nb   "rwa; rf; rwa; rwaz; rfz; rwz; rwa; rwaz; rwa; b"
 alias resyn3      "b; rs; rs -K 6; b; rsz; rsz -K 6; b; rsz -K 5; b"
 alias compress    "b -l; rw -l; rwz -l; b -l; rwz -l; b -l"
 alias compress2   "b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l"
